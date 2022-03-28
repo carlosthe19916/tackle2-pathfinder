@@ -1,0 +1,134 @@
+@startuml "Model"
+
+interface common_fields {
+    id : long
+    createTime : timestamp
+    createUser : long
+    deleted : boolean
+    updateTime: timestamp
+    updateUser: timestamp
+}
+
+package ExternalEntities {
+    entity stakeholder {
+        id : long
+        name : string
+    }    
+    entity stakeholdergroup {
+        id : long
+        name : string
+    }
+    entity application {
+        id : long
+        name : string
+    }
+}
+
+package Assessment {
+    entity assessment {
+        status : [EMPTY, STARTED, COMPLETE]
+        application_id : long
+        comment : string
+    }
+    entity assessment_questionaire {
+        assessment_id : long
+        name : string
+        language : [ES,FR,EN,IT]
+    }
+    entity assessment_category {
+        assessment_questionnaire_id : long
+        order : integer
+        name : string
+        questionaire_category_id : long
+    }
+    entity assessment_question {
+        assessment_category_id : long
+        order : integer
+        type: [SINGLE]
+        name : string
+        tooltip : string
+        question : string
+        comment : string
+        questionnaire_question_id : long
+    }
+
+    entity assessment_single_option {
+        assessment_question_id : long
+        order : integer
+        risk : [RED,AMBER,GREEN]
+        option : string
+        selected : boolean
+        questionnaire_option_id : long
+    }
+
+    entity assessment_stakeholder {
+        assessment_id : long
+        stakeholder_id : long
+    }    
+    
+    entity assessment_stakeholdergroup {
+        assessment_id : long
+        stakeholdergroup_id : long
+    }
+
+    assessment_questionaire ||--o{ assessment_category
+    assessment_category ||--o{ assessment_question
+    assessment_question ||--o{ assessment_single_option
+    assessment ||--o| assessment_questionaire
+}
+package Review {
+    entity review {
+        action : string
+        effort : string
+        criticality : string
+        priority : string
+    }
+}
+
+package Questionaire {
+    entity questionaire {
+        id : long
+        language : [ES,FR,EN,IT]
+        name : string
+    }
+    entity category {
+        id : long
+        order : integer
+        name : string
+    }
+    entity question {
+        id : long
+        order : integer
+        type: [SINGLE]
+        name : string
+        question : string
+        tooltip : string
+    }
+    entity single_option {
+        id : long
+        order : integer
+        risk : [RED,AMBER,GREEN]
+        answer : string
+    }
+    questionaire ||--o{ category
+    category ||--o{ question
+    question ||--o{ single_option
+}
+
+package Translation {
+    entity Translated_Text {
+        key : string <<Table_ID_Field>>
+        language : [ES, FR, EN, IT]
+        text : string
+    }
+}
+
+assessment ||--o{ assessment_stakeholder
+assessment ||--o{ assessment_stakeholdergroup
+assessment ||--o| review
+
+application ||..o| assessment
+
+questionaire ||..o{ assessment_questionaire
+
+@enduml
