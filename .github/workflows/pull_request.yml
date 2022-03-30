@@ -6,6 +6,7 @@ on:
 
 jobs:
   unit-test:
+
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -29,6 +30,7 @@ jobs:
       run: ./mvnw -U -B test -Ddistribution=${{ matrix.distribution }}
 
   integration-native-test:
+
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -53,6 +55,7 @@ jobs:
 
   code-coverage:
     runs-on: ubuntu-latest
+
     steps:
       - uses: actions/checkout@v2.3.5
       - name: Set up JDK 11
